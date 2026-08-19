@@ -1,0 +1,40 @@
+# Netlify configuration — Tik Token Capital
+# Static site, no build step. Netlify publishes the contents of the folder below.
+
+[build]
+  # The site lives in a sub-folder of the repo, so point Netlify at it.
+  publish = "tiktokencapital-site"
+
+# --- Security / privacy headers (applied to every response) ---
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+# --- Caching ---
+# HTML must stay fresh so content edits go live immediately.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# CSS/JS are re-uploaded on every deploy under the same names, so keep the
+# browser cache short rather than immutable.
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/assets/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+# Images rarely change — cache them hard.
+[[headers]]
+  for = "/assets/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
